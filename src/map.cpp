@@ -1,4 +1,4 @@
-#include "project/map.h"
+#include "../include/project/map.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -25,40 +25,62 @@ std::size_t Map::findIndex(const std::string& key) const {
 void Map::sortEntries() {
     std::sort(entries_.begin(), entries_.end(),
               [](const KeyValuePair& a, const KeyValuePair& b) {
-                  return a.key < b.key;
-              });
+                  return a.key < b.key;});
 }
 
-bool Map::contains(const std::string& key) const {
-    (void)key;
-    throw std::logic_error("Student implementation required: contains");
+bool Map::contains(const std::string& key) const{
+    return findIndex(key) != entries_.size();
 }
 
-bool Map::insert(const std::string& key, int value) {
-    (void)key;
-    (void)value;
-    throw std::logic_error("Student implementation required: insert");
+bool Map::insert(const std::string& key, int value){
+if (contains(key)){
+        return false;
+}
+    entries_.push_back({key, value});
+    sortEntries();
+    return true;
 }
 
-bool Map::update(const std::string& key, int newValue) {
-    (void)key;
-    (void)newValue;
-    throw std::logic_error("Student implementation required: update");
+
+bool Map::update(const std::string& key, int newValue){
+std::size_t index = findIndex(key);
+
+    if (index == entries_.size()){
+        return false;
+}
+entries_[index].value = newValue;
+return true;
 }
 
-bool Map::erase(const std::string& key) {
-    (void)key;
-    throw std::logic_error("Student implementation required: erase");
+
+bool Map::erase(const std::string& key){
+std::size_t index = findIndex(key);
+
+    if (index == entries_.size()){
+return false;
+}
+entries_.erase(entries_.begin() + index);
+return true;
 }
 
-int Map::at(const std::string& key) const {
-    (void)key;
-    throw std::logic_error("Student implementation required: at");
+int Map::at(const std::string& key) const{
+std::size_t index = findIndex(key);
+
+    if (index == entries_.size()){
+    throw std::out_of_range("out of rannge !");
 }
 
-int& Map::at(const std::string& key) {
-    (void)key;
-    throw std::logic_error("Student implementation required: at non-const");
+return entries_[index].value;
+}
+
+int& Map::at(const std::string& key){
+std::size_t index = findIndex(key);
+
+if (index == entries_.size()){
+    throw std::out_of_range("out of range!");
+}
+
+return entries_[index].value;
 }
 
 std::vector<std::string> Map::keys() const {
